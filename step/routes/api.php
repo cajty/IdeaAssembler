@@ -14,8 +14,8 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/user', [AuthController::class, 'user']);
 });
 Route::get('/hello', function () {
     return view('welcome');
@@ -24,3 +24,6 @@ Route::get('/hello', function () {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/getuser', [AuthController::class, 'getUser']);
+
