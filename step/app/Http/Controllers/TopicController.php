@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Gourp;
+use App\Models\Topic;
 use Illuminate\Http\Request;
 
-class GourpController extends Controller
+class TopicController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class GourpController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Gourp $gourp)
+    public function show(Topic $topic)
     {
         //
     }
@@ -42,7 +42,7 @@ class GourpController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Gourp $gourp)
+    public function edit(Topic $topic)
     {
         //
     }
@@ -50,7 +50,7 @@ class GourpController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Gourp $gourp)
+    public function update(Request $request, Topic $topic)
     {
         //
     }
@@ -58,7 +58,7 @@ class GourpController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Gourp $gourp)
+    public function destroy(Topic $topic)
     {
         //
     }
