@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\ComponetController;
-use App\Http\Controllers\GourpController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CategoryController;
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/getuser', [AuthController::class, 'getUser']);
 
-Route::get('/componets', [ComponetController::class, 'create']);
+Route::post('/groups/{group}/componentss', [ComponetController::class, 'create']);
 
 
 
@@ -40,3 +40,10 @@ Route::delete('/delete.category/{id}',[CategoryController::class,'deleteCategory
 Route::put('/update.category/{id}',[CategoryController::class,'editCategory'])->name('update.category');
 
 
+Route::get('/groups', [GroupController::class, 'index']);
+Route::post('/groups', [GroupController::class, 'create']);
+Route::get('/groups/{group}', [GroupController::class, 'show']);
+Route::put('/groups/{group}', [GroupController::class, 'update']);
+Route::delete('/groups/{group}', [GroupController::class, 'destroy']);
+Route::delete('/groups/{group}/components/{component}', [GroupController::class, 'destroyComponent']);
+Route::put('/groups/{group}/components/{component}', [GroupController::class, 'updateComponent']);
