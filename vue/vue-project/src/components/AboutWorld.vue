@@ -2,65 +2,71 @@
   <div class="row">
     <div class="col-4 py-5">
       <div class="list-group" id="list-tab" role="tablist">
-        <a
-          v-for="group in groups"
-          :key="group.id"
-          :class="['list-group-item', 'list-group-item-action', { active: group === selectedGroup }]"
-          :href="'#list-group-' + group.id"
-          role="tab"
-          :aria-controls="'group-' + group.id"
-          @click="selectGroup(group)"
-        >
+        <li v-for="(group, index) in groups" :key="group.id"
+          :class="['list-group-item', 'list-group-item-action', { active: group.id === selectedGroup }]" role="tab"
+          :aria-controls="'group-' + group.id" @click="selectGroup(group.id)">
           {{ group.name }}
-        </a>
+        </li>
       </div>
     </div>
     <div class="col-8">
-      <div class="tab-content" id="nav-tabContent">
-        <div
-          v-for="group in groups"
-          :key="group.id"
-          :id="'group-' + group.id"
-          class="tab-pane fade"
-          :class="{ show: group === selectedGroup }"
-          role="tabpanel"
-          :aria-labelledby="'list-group-' + group.id"
-        >
-          <h3>{{ group.name }}</h3>
-          <p>Created at: {{ group.created_at }}</p>
-          <p>Updated at: {{ group.updated_at }}</p>
-        </div>
-      </div>
+      <GroupComponent :idGroup="selectedGroup" v-if="showGroupComponent" />
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import GroupComponent from './GroupComponent.vue';
 
 export default {
+  components: {
+    GroupComponent,
+  },
   data() {
     return {
       groups: [],
-      selectedGroup: null,
+      selectedGroup: 1,
+      showGroupComponent: true,
     };
   },
   mounted() {
     this.fetchGroups();
+    window.addEventListener('keydown', this.navigateGroups);
+  },
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.navigateGroups);
   },
   methods: {
     fetchGroups() {
       axios.get(`http://127.0.0.1:8000/api/groups/`)
         .then(response => {
           this.groups = response.data;
-          this.selectedGroup = response.data[0]; // Select the first group by default
         })
         .catch(error => {
           console.error(error);
         });
     },
-    selectGroup(group) {
-      this.selectedGroup = group;
+    selectGroup(groupId) {
+      this.showGroupComponent = false;
+      this.selectedGroup = groupId;
+
+      this.$nextTick(() => {
+        this.showGroupComponent = true;
+      });
+    },
+    navigateGroups(event) {
+      if (event.key === 'ArrowDown') {
+        const nextGroupIndex = this.groups.findIndex(group => group.id === this.selectedGroup) + 1;
+        if (nextGroupIndex < this.groups.length) {
+          this.selectGroup(this.groups[nextGroupIndex].id);
+        }
+      } else if (event.key === 'ArrowUp') {
+        const prevGroupIndex = this.groups.findIndex(group => group.id === this.selectedGroup) - 1;
+        if (prevGroupIndex >= 0) {
+          this.selectGroup(this.groups[prevGroupIndex].id);
+        }
+      }
     },
   },
 };
