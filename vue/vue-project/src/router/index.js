@@ -4,7 +4,26 @@ import About from '../components/AboutWorld.vue';
 import Group from '../components/GroupComponent.vue';
 import writting from '../components/WComponent.vue';
 import groupWritting from '../components/GroupWritting.vue';
-import creatgroup from '../components/CreatGroup.vue'
+import creatgroup from '../components/CreatGroup.vue';
+
+
+import createGroup from '../components/CreateGroup.vue'
+
+
+import IdeaWriting from '../views/IdeaWriting.vue';
+import AdminView from '../views/AdminV.vue';
+
+import mindmap from '../components/MindMap.vue';
+import CreateTopic from '../views/CreatTopic.vue';
+
+
+import ProfileV from '../views/ProfileV.vue'
+
+
+
+
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,7 +57,44 @@ const router = createRouter({
       path: '/creategroup',
       name: 'creategroup',
       component: creatgroup
-    }
+    },
+    {
+      path: '/IdeaWriting',
+      name: 'IdeaWriting',
+      component: IdeaWriting
+    },
+
+    {
+      path: '/AdminView',
+      name: 'AdminView',
+      component: AdminView
+    },
+
+   
+  {
+    path: '/s',
+    name: 'creatGroup',
+    component: createGroup,
+  },
+
+  {
+    path:'/mindmap',
+    name: 'mindmap',
+    component: mindmap
+  },
+
+  {
+    path: '/create-topic',
+    name: 'CreateTopic',
+    component: CreateTopic
+  },
+
+  {
+    path: '/profile',
+    name: 'ProfileV',
+    component: ProfileV
+  },
+
 
 
   

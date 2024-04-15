@@ -3,17 +3,18 @@
     <div class="col-4 py-5">
       <div class="list-group" id="list-tab" role="tablist">
         <li v-for="(group, index) in groups" :key="group.id"
-          :class="['list-group-item', 'list-group-item-action', { active: group.id === selectedGroup }]" role="tab"
-          :aria-controls="'group-' + group.id" @click="selectGroup(group.id)">
+          :class="['list-group-item', 'list-group-item-action', { active: group === selectedGroup }]" role="tab"
+          :aria-controls="'group-' + group.id" @click="selectGroup(group)">
           {{ group.name }}
         </li>
       </div>
     </div>
     <div class="col-8">
-      <GroupComponent :idGroup="selectedGroup" v-if="showGroupComponent" />
+      <GroupComponent :Group="selectedGroup" v-if="showGroupComponent" />
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -26,8 +27,8 @@ export default {
   data() {
     return {
       groups: [],
-      selectedGroup: 1,
-      showGroupComponent: true,
+      selectedGroup: {},
+      showGroupComponent: false,
     };
   },
   mounted() {
@@ -38,33 +39,42 @@ export default {
     window.removeEventListener('keydown', this.navigateGroups);
   },
   methods: {
-    fetchGroups() {
-      axios.get(`http://127.0.0.1:8000/api/groups/`)
-        .then(response => {
-          this.groups = response.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-    selectGroup(groupId) {
-      this.showGroupComponent = false;
-      this.selectedGroup = groupId;
+    async fetchGroups() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/groups/`);
 
-      this.$nextTick(() => {
+        this.groups = response.data;
+        console.log(this.groups);
+        setTimeout(() => {
+          this.selectedGroup = this.groups[0];
+
+        }, 0);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    selectGroup(group) {
+      this.showGroupComponent = false;
+      this.selectedGroup = group;
+      setTimeout(() => {
         this.showGroupComponent = true;
-      });
+      }, 0);
+
     },
     navigateGroups(event) {
       if (event.key === 'ArrowDown') {
-        const nextGroupIndex = this.groups.findIndex(group => group.id === this.selectedGroup) + 1;
+        const nextGroupIndex = this.groups.findIndex(group => group === this.selectedGroup) + 1;
+        console.log(nextGroupIndex);
         if (nextGroupIndex < this.groups.length) {
-          this.selectGroup(this.groups[nextGroupIndex].id);
+          console.log(this.groups[nextGroupIndex]);
+          this.selectGroup(this.groups[nextGroupIndex]);
         }
       } else if (event.key === 'ArrowUp') {
-        const prevGroupIndex = this.groups.findIndex(group => group.id === this.selectedGroup) - 1;
+        const prevGroupIndex = this.groups.findIndex(group => group === this.selectedGroup) - 1;
+        console.log(prevGroupIndex);
         if (prevGroupIndex >= 0) {
-          this.selectGroup(this.groups[prevGroupIndex].id);
+          console.log(this.groups[prevGroupIndex]);
+          this.selectGroup(this.groups[prevGroupIndex]);
         }
       }
     },
