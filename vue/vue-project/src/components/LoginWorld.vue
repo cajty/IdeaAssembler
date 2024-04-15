@@ -92,7 +92,8 @@ export default {
 
                 })
                 .catch(error => {
-                    console.error(error);
+                    alert('problem in creat acount');
+
                 })
         },
         login() {
@@ -102,7 +103,7 @@ export default {
                 password: this.password,
             })
                 .then(response => {
-                    this.$router.push({ name: 'group' });
+                    this.$router.push({ name: 'about' });
                 })
                 .catch(error => {
                     console.error(error);
