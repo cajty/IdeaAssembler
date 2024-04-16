@@ -3,63 +3,112 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
+use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getUserTopic()
     {
-        //
+        $topics = Topic::where('creator_id', 1)->get();
+        return response()->json($topics);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+
+
+
+    public function create(Request $request)
     {
-        //
+        
+        try {
+            $validatedData = $request->validate([
+                'topic_name' => 'required | string | max:255',
+                'description' => 'required |max:287',
+                'category_id' => 'required',
+                'groups' => 'required|array',
+            ]);
+
+            $topic = Topic::create([
+                'topic_name' => $validatedData['topic_name'],
+                'description' => $validatedData['description'],
+                'category_id' => $validatedData['category_id'],
+                'creator_id' => 1,
+                'like_count' => 0,
+                'dislike_count' => 0,
+            ]);
+            foreach ($validatedData['groups'] as $groupID) {
+                if (!$topic->Group()->where('group_id', $groupID)->exists()) {
+                    $topic->Group()->attach($groupID);
+                }
+            }
+        } catch (QueryException $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+
+        $topicInfo = $topic->only('id', 'topic_name', 'description');
+        $topicGroups = $topic->Group->map(function ($group) {
+            return [
+                'id' => $group->id,
+                'name' => $group->name,
+            ];
+        });
+
+        return response()->json([
+            'Topic_all_info' => $topicInfo,
+            'topic_Groups' => $topicGroups,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Topic $topic)
     {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Topic $topic)
-    {
-        //
+        $topic->load('Group.component', 'Category');
+        return response()->json($topic);
+        
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Topic $topic)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required | string | max:255',
+            'description' => 'required |max:287',
+        ]);
+        $topic->update([
+            'topic_name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+        ]);
+        return response()->json(
+            $topic->only('id', 'topic_name', 'description')
+        );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Topic $topic)
     {
-        //
+        $topic->delete();
+        return response()->json(['message' => 'Topic deleted successfully']);
+    }
+    public function removedGroup(Topic $topic, $group_id)
+    {
+        $topic->Group()->detach($group_id);
+        return response()->json(['message' => 'Group removed from the Topic']);
+    }
+
+    public function addGroup(Topic $topic, $group_id)
+    {
+        
+        if (!$topic->Group()->where('group_id',$group_id )->exists()) {
+            $topic->Group()->attach($group_id);
+            return response()->json(['message' => 'Group added to the Topic']);
+        }
+        return response()->json(['error' => 'Group already added to the Topic']);
     }
 }

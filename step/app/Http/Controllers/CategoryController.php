@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function showCategory()
     {
         $categories = $this->categoryService->getAllCategories();
-        return response()->json(compact('categories'));
+        return response()->json($categories);
     }
 
     public function storeCategory(Request $request)
@@ -32,11 +32,11 @@ class CategoryController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $this->categoryService->createCategory([
+        $categorie = $this->categoryService->createCategory([
             'name' => $request->name,
         ]);
 
-        return response()->json(['message' => 'Category created successfully']);
+        return response()->json($categorie);
     }
 
     public function deleteCategory($id)
@@ -47,7 +47,7 @@ class CategoryController extends Controller
 
     public function editCategory(Request $request, $id)
     {
-        $this->categoryService->updateCategory($id, ['name' => $request->name]);
+        $categorie = $this->categoryService->updateCategory($id, ['name' => $request->name]);
         return response()->json(['message' => 'Category updated successfully']);
     }
 }

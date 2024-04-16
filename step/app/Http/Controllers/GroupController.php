@@ -11,23 +11,29 @@ use Illuminate\Database\QueryException;
 class GroupController extends Controller
 {
 
-    public function index()
+    public function getUserGroup()
     {
-        $groups = Group::all();
+        $groups = Group::where('creator_id',1)->get();
+       
+    
         return response()->json($groups);
     }
 
 
     public function create(Request $request)
     {
+       
         try {
             $validatedData = $request->validate([
-                'name' => 'required | unique:groups| string | max:255',
+                'name' => 'required | string | max:255',
                 'components' => 'required|array',
                 'components.*.content' => 'required',
             ]);
 
-            $group = Group::create(['name' => $validatedData['name']]);
+            $group = Group::create([
+                'name' => $validatedData['name'],
+                'creator_id' => 1,
+            ]);
             $components = [];
 
             foreach ($validatedData['components'] as $componentData) {
@@ -47,17 +53,17 @@ class GroupController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+        $group->load('component');
 
         return response()->json([
-            'group' => $group,
-            'components' => $components,
+             $group,
         ], 201);
     }
 
 
     public function show(Group $group)
     {
-        $components = $group->Component->pluck('content', 'id');
+        $components = $group->Component;
         return response()->json([
             'group' => $group->name,
             'components' => $components
@@ -70,7 +76,9 @@ class GroupController extends Controller
             'name' => 'required',
         ]);
         $group->update($validatedData);
-        return response()->json($group);
+        return response()->json(
+            ['group' => $group->name]
+        );
     }
 
 
@@ -83,22 +91,5 @@ class GroupController extends Controller
     {
         $group->Component()->detach($component->id);
         return response()->json(['message' => 'Component removed from the group']);
-    }
-
-    public function updateComponent(Request $request, Group $group, Component $component)
-    {
-        $validatedData = $request->validate([
-            'content' => 'required',
-        ]);
-        $componentup = Component::firstOrCreate( $validatedData);
-
-
-        if (!$group->Component()->where('component_id', $componentup->id)->exists()) {
-            $group->Component()->attach($componentup->id);
-            $group->Component()->detach($component->id);
-        }
-
-
-        return response()->json($group);
     }
 }

@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name',
+        'name', 'creator_id'
     ];
     public function Component(){
-        return $this->belongsToMany(Component::class, 'component_id');
+        return $this->belongsToMany(Component::class, 'component_group');
     }
     public function Topic()
     {
-        return $this->belongsToMany(Topic::class, 'group_topic');
+        return $this->hasMany(Topic::class, 'group_topic');
     }
+    protected $hidden = ['pivot', 'updated_at', 'created_at'];
 }
