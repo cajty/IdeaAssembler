@@ -1,6 +1,5 @@
 <template>
   <div class="container mt-5">
-    <h1>egrgr</h1>
     <div class="card">
       <div class="card-body">
         <h1 class=" mb-4">

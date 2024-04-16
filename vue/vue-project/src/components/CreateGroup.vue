@@ -1,6 +1,7 @@
 <template>
-    <div class="container mt-5">
-        <div class="card">
+ 
+        <div class="card popup">
+        <button @click="closePopup" class="btn btn-light position-absolute top-0 end-0 m-1">x</button>
             <div class="card-body">
                 <form>
                     <div class="mb-3">
@@ -20,7 +21,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    
 </template>
 
 <script>
@@ -36,6 +37,9 @@ export default {
         };
     },
     methods: {
+        closePopup() {
+            this.$emit('close');
+        },
         addComponent() {
             this.newGroup.components.push({ content: '' });
         },
@@ -46,8 +50,10 @@ export default {
             }
             axios.post('http://127.0.0.1:8000/api/groups', this.newGroup)
                 .then(response => {
-                    console.log(response.data);
-                    this.newGroup = { name: '', components: [{ content: '' }] };
+                    this.newGroup =response.data;
+                    this.$emit( 'newGroup' ,this.newGroup[0]);
+                 
+                    
                 })
                 .catch(error => {
                     console.error(error);
@@ -56,3 +62,20 @@ export default {
     },
 };
 </script>
+<style scoped>
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 80%;
+    max-width: 450px;
+    height: 80%;
+    max-height: 450PX;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>

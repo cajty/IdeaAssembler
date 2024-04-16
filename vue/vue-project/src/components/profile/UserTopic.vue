@@ -7,6 +7,9 @@
             <div class="card ">
               <h5 class="card-title">{{ topic.topic_name }}</h5>
               <p class="card-text">{{ topic.description.substring(0, 100)  }} ..</p>
+              <router-link :to="`/topic/${topic.id}`" class="btn btn-primary">
+              <i class="fas fa-eye"></i> Show Topic
+            </router-link>
             </div>
           </div>
         </div>
