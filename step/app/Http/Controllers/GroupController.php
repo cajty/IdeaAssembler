@@ -57,7 +57,6 @@ class GroupController extends Controller
 
         return response()->json([
              $group,
-          
         ], 201);
     }
 
