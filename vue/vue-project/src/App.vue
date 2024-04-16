@@ -17,13 +17,16 @@ import './assets/main.css'
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link class="nav-link" to="/wallet">Home</router-link>
+              <router-link class="nav-link" to="/AdminView">AdminView</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/transactions">Transactions</router-link>
+              <router-link class="nav-link" to="/profile">profile</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link" to="/admin">Admin</router-link>
+              <router-link class="nav-link" to="/create-topic">create-topic</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/s">create-group</router-link>
             </li>
           </ul>
 

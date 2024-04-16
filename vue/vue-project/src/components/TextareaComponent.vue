@@ -7,7 +7,7 @@ export default {
     props: ['selectedWork'],
     methods: {
         updateSelectedWork(event) {
-            this.$emit('update:selectedWork', event.target.value);
+            this.$emit('updateText', event.target.value);
         }
     }
 }

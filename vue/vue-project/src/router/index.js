@@ -19,6 +19,8 @@ import CreateTopic from '../views/CreatTopic.vue';
 
 import ProfileV from '../views/ProfileV.vue'
 
+import TopicDetail from '../views/TopicDetail.vue'
+
 
 
 
@@ -94,7 +96,12 @@ const router = createRouter({
     name: 'ProfileV',
     component: ProfileV
   },
-
+  {
+    path: '/topic/:id',
+    name: 'TopicDetail',
+    component: TopicDetail,
+    props: true
+  },
 
 
   
