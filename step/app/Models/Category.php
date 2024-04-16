@@ -9,4 +9,11 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+
+    public function Topic()
+    {
+        return $this->hasMany(Topic::class);
+    }
+    protected $hidden = [ 'updated_at', 'created_at'];
+
 }

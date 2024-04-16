@@ -10,25 +10,43 @@ use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 
 class ComponetController extends Controller
-{public function create(Group $group, Request $request)
+{
+    public function createComponent(Group $group, Request $request)
     {
-        
         try {
             $validatedData = $request->validate([
                 'content' => 'required',
             ]);
-
             $component = Component::firstOrCreate($validatedData);
-            $group->Component()->attach($component->id);
+            if (!$group->Component()->where('component_id', $component->id)->exists()) {
+                $group->Component()->attach($component->id);
+                return response()->json(['component' => $component], 201);
+            }
+            return response()->json(['error' => 'Component already exists'], 500);
         } catch (QueryException $exception) {
             return response()->json(['error' => $exception->getMessage()], 500);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
+                'error' => $th->getMessage()
             ], 500);
         }
+    }
 
-        return response()->json($component, 201);
+
+    public function updateComponent(Request $request, Group $group, Component $component)
+    {
+        $validatedData = $request->validate([
+            'content' => 'required',
+        ]);
+        $componentup = Component::firstOrCreate($validatedData);
+
+
+        if (!$group->Component()->where('component_id', $componentup->id)->exists()) {
+            $group->Component()->attach($componentup->id);
+            $group->Component()->detach($component->id);
+        }
+
+
+        return response()->json(['message' => 'Component updated successfully'], 201);
     }
 }

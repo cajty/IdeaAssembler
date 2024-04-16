@@ -12,6 +12,8 @@ class Component extends Model
         'content',
     ];
     public function group(){
-        return $this->belongsToMany(Group::class, 'group_id');
+        return $this->belongsToMany(Group::class, 'component_group');
     }
+
+    protected $hidden = ['pivot', 'updated_at', 'created_at'];
 }
