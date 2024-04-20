@@ -3,10 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\ComponetController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\SearchTopicController;
 use App\Http\Controllers\TopicController;
 
@@ -20,6 +20,13 @@ use App\Http\Controllers\TopicController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::get('/ideas/user', [IdeaController::class, 'getUserIdeas']);
+Route::post('/ideas', [IdeaController::class, 'store']);
+Route::get('/ideas/{idea}', [IdeaController::class, 'show']);
+Route::put('/ideas/{idea}', [IdeaController::class, 'update']);
+Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user', [AuthController::class, 'user']);
@@ -45,7 +52,7 @@ Route::delete('/category/{id}',[CategoryController::class,'deleteCategory'])->na
 Route::put('/category/{id}',[CategoryController::class,'editCategory'])->name('update.category');
 
 
-Route::get('/groups', [GroupController::class, 'getUserGroup']);
+Route::get('/groups', [TopicController::class, 'getUserGroup']);
 Route::post('/groups', [GroupController::class, 'create']);
 Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groupShow');
 Route::put('/groups/{group}', [GroupController::class, 'update']);
@@ -69,3 +76,5 @@ Route::post('/topics/{topic}/groups/{group}', [TopicController::class, 'addGroup
 Route::get('/search/topics/name', [SearchTopicController::class, 'searchByName']);
 Route::get('/search/topics/category', [SearchTopicController::class, 'searchByCategory']);
 Route::get('/filter/topics/likes', [SearchTopicController::class, 'filterByLike']);
+
+

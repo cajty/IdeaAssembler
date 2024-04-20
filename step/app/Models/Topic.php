@@ -15,6 +15,7 @@ class Topic extends Model
         'category_id',
         'creator_id',
         'like_count',
+        'is_p',
         'dislike_count',
     ];
     public function Group()

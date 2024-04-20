@@ -61,7 +61,7 @@ const router = createRouter({
       component: creatgroup
     },
     {
-      path: '/IdeaWriting',
+      path: '/IdeaWriting/:ideaId/:topicId',
       name: 'IdeaWriting',
       component: IdeaWriting
     },

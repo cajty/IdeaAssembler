@@ -5,10 +5,12 @@
         <h1 class=" mb-4">
           <input type="text" v-model="Group.name">
         </h1>
-        <button @click="updateGroup( Group.name)" class="btn btn-primary">
+        <button @click="updateGroup(Group.name)" class="btn btn-primary">
           <i class="fas fa-edit"></i>
         </button>
         <button @click="deleteGroup()" class="btn btn-danger">Delete Group</button>
+        <button @click="removedGroup()" class="btn btn-danger">remove Group</button>
+
         <!-- Form to add a new component -->
         <form @submit.prevent="createComponent" class="mb-4">
           <p v-if="error" class="text-danger mt-2">{{ error }}</p>
@@ -105,25 +107,34 @@ export default {
       axios.put(`http://127.0.0.1:8000/api/groups/${this.Group.id}`, { name: groupName })
         .then(response => {
           console.log(groupName);
-          this.Group.name= groupName;
+          this.Group.name = groupName;
         })
         .catch(error => {
           console.error(error);
         });
     },
-    deleteGroup() {
-    axios.delete(`http://127.0.0.1:8000/api/groups/${this.Group.id}`)
-      .then(() => {
-        // remove the group from the local state
-        this.Group = this.Group.filter(group => group.id !== groupId);
-      })
-      .catch(error => {
+    async deleteGroup() {
+      try {
+        await axios.delete(`http://127.0.0.1:8000/api/groups/${this.Group.id}`);
+        this.$emit('removedGroup', this.Group.id);
+        alert('Group deleted successfully!');
+      } catch (error) {
         console.error(error);
-      });
-  },
-  },
- 
+      }
+    },
+    async removedGroup() {
+      try {
+        
+        console.log(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${this.Group.id}`);
+        this.$emit('removedGroup', this.Group.id);
+        alert('Group removed successfully!')
+      } catch (error) {
+        console.error(error);
+      }
+    
+    }
 
+  }
 }
 </script>
 

@@ -1,23 +1,33 @@
 <template>
-<section class="my-section">
-  <div class="my-card">
-    <div class="my-card-header">
-      <h2><i class="fas fa-heading"></i> {{ topic.topic_name }}</h2>
-    </div>
-    <div class="my-card-body">
-      <p class="my-card-text"><i class="fas fa-align-left"></i> Description: {{ topic.description }}</p>
-    </div>
-    <div class="my-card-footer">
-      <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ topic.like_count }}</span>
-      <i class="fas fa-thumbs-down"></i> <span class="dislike-count">{{ topic.dislike_count }}</span>
-      <p class="my-card-text"><i class="fas fa-user"></i> Creator ID: {{ topic.creator_id }}</p>
-        <button class="btn btn-green" @click="creatGroup" >creat group</button>
-    </div>
-  </div>
-</section>
+    <section class="my-section">
+        <div class="my-card">
+            <div class="my-card-header">
+                <h2><i class="fas fa-heading"></i> {{ topic.topic_name }}</h2>
+            </div>
+            <div class="my-card-body">
+                <p class="my-card-text"><i class="fas fa-align-left"></i> {{ topic.description }}</p>
+            </div>
+            <div class="my-card-footer">
+                <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ topic.like_count }}</span>
+                <i class="fas fa-thumbs-down"></i> <span class="dislike-count">{{ topic.dislike_count }}</span>
+                <p class="my-card-text"><i class="fas fa-user"></i> Creator ID: {{ topic.creator_id }}</p>
+                <button class="btn btn-green" @click="creatGroup">creat group</button>
+            </div>
+        </div>
+    </section>
 
-<CreatGroup v-if="showGroupCreat" @close="close" @newGroup="newGroup" />
-        
+    <CreatGroup v-if="showGroupCreat" @close="close" @newGroup="newGroup" />
+
+
+
+
+
+
+
+
+
+
+
 
 
     <div class="container mt-4">
@@ -25,7 +35,7 @@
             <ListGroupComponent :groups="group" :selectedGroup="selectedGroup" @updateGroup="componentsOfGroup" />
         </div>
         <p v-if="error" class="text-danger">{{ error }}</p>
-        <GroupComponent :Group="selectedGroup" />
+        <GroupComponent :Group="selectedGroup" @removedGroup="removedGroup" />
 
     </div>
 </template>
@@ -35,13 +45,16 @@ import axios from 'axios';
 import ListGroupComponent from '../components/ListGroupComponent.vue';
 import GroupComponent from '../components/GroupComponent.vue';
 import CreatGroup from '@/components/CreateGroup.vue';
+import GroupSelect from '@/components/select/GroupSelect.vue';
+
 
 export default {
     components: {
-    
+
         ListGroupComponent,
         GroupComponent,
         CreatGroup,
+        GroupSelect,
     },
     data() {
         return {
@@ -62,8 +75,14 @@ export default {
     beforeDestroy() {
         window.removeEventListener("keydown", this.thatKeyPresed);
     },
+    props: {
+        id: {
+            type: [String, Number],
+            required: true
+        }
+    },
     methods: {
-        
+
         selectWork(work) {
             this.selectedWork += work + " ";
         },
@@ -110,7 +129,7 @@ export default {
             await axios.get(`http://127.0.0.1:8000/api/topics/${id}`)
                 .then(response => {
                     this.topic = response.data;
-                    this.group =  this.topic.group;
+                    this.group = this.topic.group;
                     this.componentsOfGroup(0);
 
                 })
@@ -123,25 +142,38 @@ export default {
             this.showGroupCreat = false;
         },
         creatGroup() {
-            
+
             this.showGroupCreat = true;
         },
         async newGroup(group) {
-  this.close();
-  console.log(group);
-  this.group.push(group);
-  try {
-    const response = await axios.post(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${group.id}`);
-    alert(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-},
+            this.close();
+            console.log(group);
+            this.group.push(group);
+            try {
+                const response = await axios.post(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${group.id}`);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        // async addGroups(group) {
+        //     this.close();
+        //     console.log(group);
+        //     this.group.push(group);
+        //     try {
+        //         const response = await axios.post(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${group.id}`);
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // },
+        async removedGroup(group_id) {
+            this.group = this.group.filter(group => group.id !== group_id);
+        }
 
     },
+
 };
 </script>
-<style >
+<style>
 .container {
     padding: 20px;
 }
@@ -169,63 +201,58 @@ export default {
     color: red;
     margin-top: 20px;
 }
+
 .my-section {
-  margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 .my-card {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }
 
 .my-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .my-card-header {
-  background-color: #007bff;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  color: #ffffff;
-  padding: 15px;
+    background-color: #007bff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: #ffffff;
+    padding: 15px;
 }
 
 .my-card-body {
-  padding: 20px;
+    padding: 20px;
 }
 
 .my-card-text {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .my-card-footer {
-  background-color: #f8f9fa;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .like-count,
 .dislike-count {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 @media (max-width: 768px) {
-  .my-card-footer {
-    flex-direction: column;
-  }
+    .my-card-footer {
+        flex-direction: column;
+    }
 }
-
-
-
-
-
-
 </style>
 
 

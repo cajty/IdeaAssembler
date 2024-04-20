@@ -13,7 +13,7 @@ class GroupController extends Controller
 
     public function getUserGroup()
     {
-        $groups = Group::where('creator_id',1)->get();
+        $groups = Group::all();
        
     
         return response()->json($groups);
@@ -32,7 +32,6 @@ class GroupController extends Controller
 
             $group = Group::create([
                 'name' => $validatedData['name'],
-                'creator_id' => 1,
             ]);
             $components = [];
 

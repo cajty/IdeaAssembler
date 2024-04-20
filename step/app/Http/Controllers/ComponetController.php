@@ -17,6 +17,9 @@ class ComponetController extends Controller
             $validatedData = $request->validate([
                 'content' => 'required',
             ]);
+            if( $group == null){
+                $indexGroup = Group :: where('topic_name' ,'All_Groups')->where('creator_id', 1)->first();
+            }
             $component = Component::firstOrCreate($validatedData);
             if (!$group->Component()->where('component_id', $component->id)->exists()) {
                 $group->Component()->attach($component->id);
