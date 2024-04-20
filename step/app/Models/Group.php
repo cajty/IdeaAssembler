@@ -10,7 +10,7 @@ class Group extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'creator_id'
+        'name'
     ];
     public function Component(){
         return $this->belongsToMany(Component::class, 'component_group');

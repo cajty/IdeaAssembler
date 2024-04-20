@@ -8,7 +8,7 @@ import './assets/main.css'
 <template>
 
   <div  class="row justify-content-between">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container">
         <router-link class="navbar-brand" to="/">IdeaAssembler</router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,9 +28,12 @@ import './assets/main.css'
             <li class="nav-item">
               <router-link class="nav-link" to="/s">create-group</router-link>
             </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/IdeaWriting">IdeaWriting</router-link>
+            </li>
           </ul>
 
-          <div class="dropdown">
+          <div class="dropdown  ">
             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
               {{ isLoggedIn ? userName : 'Login' }}
             </button>

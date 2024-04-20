@@ -10,28 +10,23 @@
         <label for="description">Description</label>
         <textarea class="form-control" id="description" v-model="description" required></textarea>
       </div>
-      <div class="form-group">
-        <label for="category">Category</label>
-        <select class="form-control" id="category" v-model="category" >
-          <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Groups</label>
-        <div v-for="group in groups" :key="group.id" class="form-check">
-          <input type="checkbox" class="form-check-input" :id="'group' + group.id" :value="group.id" v-model="selectedGroups">
-          <label class="form-check-label" :for="'group' + group.id">{{ group.name }}</label>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary">Create</button>
+     <GroupSelect @selectedGroups="selectedGroup" />
+     <CategorySelect @select-category="selectCategory" />
+      <button type="submit" class="btn btn-primary">Create Topic</button>
     </form>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import GroupSelect from '@/components/select/GroupSelect.vue';
+import CategorySelect from '@/components/select/CategorySelect.vue';
 
 export default {
+  components: {
+    GroupSelect,
+    CategorySelect,
+  },
   data() {
     return {
       topicName: '',
@@ -42,17 +37,17 @@ export default {
       groups: []
     }
   },
-  async created() {
-    try {
-      const responseCategories = await axios.get('http://127.0.0.1:8000/api/category');
-      this.categories = responseCategories.data;
-      const response =  await axios.get('http://127.0.0.1:8000/api/groups');
-      this.groups = response.data;
-    } catch (error) {
-      console.error(error);
-    }
-  },
   methods: {
+    selectedGroup(selectedGroups) {
+      console.log(selectedGroups);
+      this.selectedGroups = selectedGroups;
+      console.log(this.selectedGroups);
+    },
+    selectCategory(category) {
+      console.log(category);
+      this.category = category;
+      console.log(this.category);
+    },
     async createTopic() {
       try {
         const response = await axios.post('http://127.0.0.1:8000/api/topics', {
@@ -61,7 +56,7 @@ export default {
           category_id: this.category,
           groups: this.selectedGroups
         });
-         let id = response.data.Topic_all_info.id;
+        let id = response.data.Topic_all_info.id;
         this.$router.push(`/topic/${id}`);
       } catch (error) {
         console.error(error);

@@ -10,48 +10,44 @@ use DOMDocument;
 
 class IdeaController extends Controller
 {
-    public function index()
+    public function getUserIdeas()
     {
-        $ideas = Idea::all();
-        return view('index', compact('ideas'));
+        $ideas = Idea::where('user_id', 1)->get();
+        return response()->json($ideas);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        $description = $request->description;
+       
+        // $description = $request->description;
 
-        $dom = new DOMDocument();
-        $dom->loadHTML($description, 9);
+        // $dom = new DOMDocument();
+        // $dom->loadHTML($description, 9);
 
-        $images = $dom->getElementsByTagName('img');
+        // $images = $dom->getElementsByTagName('img');
 
-        foreach ($images as $key => $img) {
-            $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
-            $image_name = "/upload/" . time() . $key . '.png';
-            file_put_contents(public_path() . $image_name, $data);
+        // foreach ($images as $key => $img) {
+        //     $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
+        //     $image_name = "/upload/" . time() . $key . '.png';
+        //     file_put_contents(public_path() . $image_name, $data);
 
-            $img->removeAttribute('src');
-            $img->setAttribute('src', $image_name);
+        //     $img->removeAttribute('src');
+        //     $img->setAttribute('src', $image_name);
+        // }
+        // $description = $dom->saveHTML();
+
+        try {
+            $idea = Idea::create([
+                'title' => $request->title,
+                'content' => $request->content,
+                'user_id' => 1
+            ]);
+        
+            return response()->json($idea, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-        $description = $dom->saveHTML();
-
-        Idea::create([
-            'title' => $request->title,
-            'description' => $description
-        ]);
-
-        return redirect('/');
     }
 
     /**
@@ -60,64 +56,54 @@ class IdeaController extends Controller
     public function show($id)
     {
         $ideas = Idea::find($id);
-        return view('show', compact('Idea'));
+        return response()->json($ideas);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+   
+    public function update(Request $request, Idea $idea)
     {
-        $ideas = Idea::find($id);
-        return view('edit', compact('Idea'));
-    }
+       
+    
+     
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        $ideas = Idea::find($id);
+        // $description = $request->description;
 
-        $description = $request->description;
+        // $dom = new DOMDocument();
+        // $dom->loadHTML($description, 9);
 
-        $dom = new DOMDocument();
-        $dom->loadHTML($description, 9);
+        // $images = $dom->getElementsByTagName('img');
 
-        $images = $dom->getElementsByTagName('img');
+        // foreach ($images as $key => $img) {
 
-        foreach ($images as $key => $img) {
+        //     // Check if the image is a new one
+        //     if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
 
-            // Check if the image is a new one
-            if (strpos($img->getAttribute('src'), 'data:image/') === 0) {
+        //         $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
+        //         $image_name = "/upload/" . time() . $key . '.png';
+        //         file_put_contents(public_path() . $image_name, $data);
 
-                $data = base64_decode(explode(',', explode(';', $img->getAttribute('src'))[1])[1]);
-                $image_name = "/upload/" . time() . $key . '.png';
-                file_put_contents(public_path() . $image_name, $data);
+        //         $img->removeAttribute('src');
+        //         $img->setAttribute('src', $image_name);
+        //     }
+        // }
+        // $description = $dom->saveHTML();
 
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $image_name);
-            }
-        }
-        $description = $dom->saveHTML();
-
-        $ideas->update([
+        $idea->update([
             'title' => $request->title,
-            'description' => $description
+            'content' => $request->content,
         ]);
 
-        return redirect('/');
+        return response()->json(['message' => 'Idea updated successfully', 
+        'idea' => $idea]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+ 
     public function destroy($id)
     {
-        $ideas = Idea::find($id);
+        $idea = Idea::find($id);
 
         $dom = new DOMDocument();
-        $dom->loadHTML($ideas->description, 9);
+        $dom->loadHTML($idea->description, 9);
         $images = $dom->getElementsByTagName('img');
 
         foreach ($images as $key => $img) {
@@ -131,7 +117,7 @@ class IdeaController extends Controller
             }
         }
 
-        $ideas->delete();
-        return redirect()->back();
+        $idea->delete();
+        return response()->json(['message' => 'Idea deleted successfully']);
     }
 }

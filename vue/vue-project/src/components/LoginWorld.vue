@@ -92,6 +92,7 @@ export default {
 
                 })
                 .catch(error => {
+                    console.log(error.response.data);
                     alert('problem in creat acount');
 
                 })

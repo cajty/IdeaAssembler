@@ -1,13 +1,14 @@
 <template>
+    <h1>topicId: {{ this.$route.params.topicId }}</h1>
+    <h1>groupId: {{ this.$route.params.ideaId }}</h1>
     <div class="container mt-4">
-        <TextareaComponent :selectedWork="selectedWork"  @updateText="updateWork" />
+        <TextareaComponent :selectedWork="selectedWork" :idea="idea" @updateText="updateWork" />
         <div class="row">
-        <ListGroupComponent :groups="group" :selectedGroup="selectedGroup"
-            @updateGroup="componentsOfGroup" />
-        <WorksComponent :works="works" @updateWork="selectWork" />
+            <ListGroupComponent :groups="group" :selectedGroup="selectedGroup" @updateGroup="componentsOfGroup" />
+            <WorksComponent :works="works" @updateWork="selectWork" />
         </div>
         <p v-if="error" class="text-danger">{{ error }}</p>
-      <GroupComponent :Group="selectedGroup"/>
+        <GroupComponent :Group="selectedGroup" />
     </div>
 </template>
 
@@ -25,18 +26,21 @@ export default {
         WorksComponent,
         GroupComponent,
     },
+    emits: ['updateText'],
     data() {
         return {
+            idea: {},
             group: {},
             works: {},
             showGroupComponent: false,
-            selectedGroup: 0,
+            selectedGroup: {},
             selectedWork: '',
             error: null,
         };
     },
     mounted() {
-        this.fetchGroup(0);
+        this.fetchTopic();
+        this.fetchIdea();
         window.addEventListener("keydown", this.thatKeyPresed);
     },
     beforeDestroy() {
@@ -48,7 +52,7 @@ export default {
             console.log(this.selectedWork);
         },
         updateWork(work) {
-            this.selectedWork += work + " ";
+            this.selectedWork = work;
             console.log(this.selectedWork);
         },
         thatKeyPresed(event) {
@@ -67,7 +71,7 @@ export default {
                 const prevGroupIndex = this.group.findIndex(group => group === this.selectedGroup) - 1;
 
                 if (prevGroupIndex >= 0) {
-                    
+
                     this.componentsOfGroup(prevGroupIndex);
                 }
             }
@@ -89,11 +93,12 @@ export default {
             this.selectedGroup = this.group[id];
             this.works = list;
         },
-        async fetchGroup(id) {
-            await axios.get(`http://127.0.0.1:8000/api/topics/8`)
+        async fetchTopic() {
+            let topicId = this.$route.params.topicId;
+            await axios.get(`http://127.0.0.1:8000/api/topics/${topicId}`)
+
                 .then(response => {
                     this.group = response.data.group;
-                    console.log(this.group);
                     this.componentsOfGroup(0);
 
                 })
@@ -102,6 +107,19 @@ export default {
                     this.error = 'Failed to fetch data';
                 });
         },
+        async fetchIdea() {
+            let ideaId = this.$route.params.ideaId;
+            await axios.get(`http://127.0.0.1:8000/api/ideas/${ideaId}`)
+                .then(response => {
+                    this.idea = response.data;
+                    this.selectedWork = this.idea.content;
+
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.error = 'Failed to fetch data';
+                });
+        }
     },
 };
 </script>

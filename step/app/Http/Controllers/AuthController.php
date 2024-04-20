@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Topic;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +30,6 @@ class AuthController extends Controller
 
             if ($validateUser->fails()) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'validation error',
                     'errors' => $validateUser->errors()
                 ], 401);
@@ -40,9 +40,19 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
+            if($user){
+                Topic::create([
+                    'topic_name' => 'All_Groups',
+                    'description' => 'All groups of user',
+                    'category_id' => 1,
+                    'creator_id' => $user->id,
+                    'is_p' => 1,
+                    'like_count' => 0,
+                    'dislike_count' => 0,
+                ]);
+            }
 
             return response()->json([
-                'status' => true,
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
