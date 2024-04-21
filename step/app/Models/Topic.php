@@ -28,5 +28,10 @@ class Topic extends Model
         return $this->belongsTo(Category::class,'category_id');
     }
 
+    public function Tag()
+    {
+        return $this->belongsToMany(Tag::class, 'tag_topic');
+    }
+    
 
 }

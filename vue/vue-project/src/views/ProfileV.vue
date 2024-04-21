@@ -9,11 +9,21 @@
                             <img :src="profile.avatar" alt="Profile avatar" class="rounded-circle mb-3" width="100"
                                 height="100">
                             <h5 class="card-title">{{ profile.name }}</h5>
-                            <ideaShowForm v-if="showIdeaFrom" @close="close" :idea_id="idea_id"/>
-                           <button class="btn btn-black" @click="showIdeaFrom = true" >creat idea </button>
-                           <CreatGroup v-if="showGroupCreat" @close="close" @newGroup="newGroup" />
 
-                          
+
+                            <button class="btn btn-black" @click="showIdeaFrom = true">creat idea </button>
+                            <ideaShowForm v-if="showIdeaFrom" @close="close" :idea_id="idea_id" />
+
+
+                            <button class="btn btn-black" @click="showGroupCreat = true">creat Group </button>
+                            <CreatGroup v-if="showGroupCreat" @close="showGroupCreat = false" @newGroup="newGroup" />
+
+                            <button class="btn btn-black" @click="showTopicCreat = true">creat Topic </button>
+                            <CreatTopic v-if="showTopicCreat" @close="showTopicCreat = false" @newGroup="newGroup" />
+
+
+
+
 
                         </div>
                     </div>
@@ -26,7 +36,7 @@
 
             <div class="col-md-3 mb-3">
 
-                <UserGroup />
+                <UserGroup @addGroup="addGoup" />
 
             </div>
 
@@ -55,7 +65,8 @@ import UserTopic from '../components/profile/UserTopic.vue'
 import UserIdea from '../components/profile/UserIdea.vue'
 import TopicSelect from '@/components/select/TopicSelect.vue'
 import ideaShowForm from '../components/form/ideaShowForm.vue'
-import CreatGroup from '@/components/CreateGroup.vue';
+import CreatGroup from '@/components/form/CreateGroup.vue';
+import CreatTopic from '../components/form/CreatTopic.vue'
 
 
 
@@ -67,14 +78,18 @@ export default {
         UserIdea,
         TopicSelect,
         ideaShowForm,
-        CreatGroup
+        CreatGroup,
+        CreatTopic
     },
     data() {
         return {
             topic: null,
             idea_id: null,
             title: '',
+            addGoup: "",
             showIdeaFrom: false,
+            showTopicCreat: false,
+            showGroupCreat: false,
             profile: {
                 name: 'John Doe',
                 bio: 'Software engineer with 5+ years of experience in web development.',
@@ -88,17 +103,25 @@ export default {
             this.topic = topic;
         },
         ideaShow() {
-           
+
 
         },
         close() {
             this.showIdeaFrom = false;
             this.idea_id = null;
         },
-     
+
         ideaShowWirting(idea_id) {
             this.idea_id = idea_id;
             this.showIdeaFrom = true;
+        },
+        newGroup(group) {
+            this.showGroupCreat = false
+            console.log(group);
+            this.$emit('addGroup', group);
+
+
+
         },
     },
 };

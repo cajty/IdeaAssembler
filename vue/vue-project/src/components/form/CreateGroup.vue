@@ -52,7 +52,6 @@ export default {
                 .then(response => {
                     this.newGroup =response.data;
                     this.$emit( 'newGroup' ,this.newGroup[0]);
-                 
                     
                 })
                 .catch(error => {

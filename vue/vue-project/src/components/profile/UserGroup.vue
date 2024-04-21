@@ -29,6 +29,11 @@ export default {
       console.error(error);
     }
   },
+  methods:{
+    addGoup(group){
+      this.groups.push(group)
+    }
+  },
 };
 </script>
 

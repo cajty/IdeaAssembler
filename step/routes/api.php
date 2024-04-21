@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\SearchTopicController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TopicController;
 
 /*
@@ -52,7 +53,7 @@ Route::delete('/category/{id}',[CategoryController::class,'deleteCategory'])->na
 Route::put('/category/{id}',[CategoryController::class,'editCategory'])->name('update.category');
 
 
-Route::get('/groups', [TopicController::class, 'getUserGroup']);
+Route::get('/groups', [GroupController::class, 'getUserGroup']);
 Route::post('/groups', [GroupController::class, 'create']);
 Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groupShow');
 Route::put('/groups/{group}', [GroupController::class, 'update']);
@@ -76,5 +77,16 @@ Route::post('/topics/{topic}/groups/{group}', [TopicController::class, 'addGroup
 Route::get('/search/topics/name', [SearchTopicController::class, 'searchByName']);
 Route::get('/search/topics/category', [SearchTopicController::class, 'searchByCategory']);
 Route::get('/filter/topics/likes', [SearchTopicController::class, 'filterByLike']);
+
+
+
+Route::post('/topics/{topic}/tags', [TopicController::class, 'updateTag']);
+
+
+Route::get('/tag', [TagController::class, 'allTag']);
+Route::post('/tag', [TagController::class, 'storeTag']);
+Route::delete('/tag/{id}', [TagController::class, 'deleteTag']);
+Route::put('/tag/{id}', [TagController::class, 'editTag']);
+
 
 
