@@ -1,5 +1,6 @@
 <template>
-  <div class="row">
+  <h1>saber + tnafase</h1>
+  <!-- <div class="row">
     <div class="col-4 py-5">
       <div class="list-group" id="list-tab" role="tablist">
         <li v-for="(group, index) in groups" :key="group.id"
@@ -12,13 +13,13 @@
     <div class="col-8">
       <GroupComponent :Group="selectedGroup" v-if="showGroupComponent" />
     </div>
-  </div>
+  </div> -->
 </template>
 
-
+<!-- 
 <script>
 import axios from 'axios';
-import GroupComponent from './GroupComponent.vue';
+import GroupComponent from './select/GroupSelect';
 
 export default {
   components: {
@@ -80,4 +81,4 @@ export default {
     },
   },
 };
-</script>
+</script> -->

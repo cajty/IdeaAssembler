@@ -22,15 +22,6 @@ import './assets/main.css'
             <li class="nav-item">
               <router-link class="nav-link" to="/profile">profile</router-link>
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/create-topic">create-topic</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/s">create-group</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/IdeaWriting">IdeaWriting</router-link>
-            </li>
           </ul>
 
           <div class="dropdown  ">

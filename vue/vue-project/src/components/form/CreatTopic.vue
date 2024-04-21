@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="popup">
+    <button @click="closePopup" class="btn btn-light position-absolute top-0 end-0 m-1">x</button>
     <h1>Create Topic</h1>
     <form @submit.prevent="createTopic">
       <div class="form-group">
@@ -10,8 +11,8 @@
         <label for="description">Description</label>
         <textarea class="form-control" id="description" v-model="description" required></textarea>
       </div>
-     <GroupSelect @selectedGroups="selectedGroup" />
-     <CategorySelect @select-category="selectCategory" />
+      <GroupSelect @selectedGroups="selectedGroup" />
+      <CategorySelect @select-category="selectCategory" />
       <button type="submit" class="btn btn-primary">Create Topic</button>
     </form>
   </div>
@@ -38,6 +39,9 @@ export default {
     }
   },
   methods: {
+    closePopup() {
+      this.$emit('close');
+    },
     selectedGroup(selectedGroups) {
       console.log(selectedGroups);
       this.selectedGroups = selectedGroups;
@@ -65,3 +69,21 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 80%;
+  max-width: 90vw;
+  height: 80%;
+  max-height: 90vh;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style>

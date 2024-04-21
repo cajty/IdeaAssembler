@@ -1,6 +1,5 @@
 <template>
     <div>
-        <b>User Group</b>
         <div class="form-group">
             <div class="row overflow-auto" style="max-height: 100px;">
                 <div v-for="group in groups" :key="group.id" class="col-12">

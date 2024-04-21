@@ -1,20 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import  Login from '../components/LoginWorld.vue' ;
 import About from '../components/AboutWorld.vue';
-import Group from '../components/GroupComponent.vue';
+
 import writting from '../components/WComponent.vue';
 import groupWritting from '../components/GroupWritting.vue';
-import creatgroup from '../components/CreatGroup.vue';
 
 
-import createGroup from '../components/CreateGroup.vue'
+
+
 
 
 import IdeaWriting from '../views/IdeaWriting.vue';
 import AdminView from '../views/AdminV.vue';
 
 import mindmap from '../components/MindMap.vue';
-import CreateTopic from '../views/CreatTopic.vue';
 
 
 import ProfileV from '../views/ProfileV.vue'
@@ -29,11 +28,7 @@ import TopicDetail from '../views/TopicDetail.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/group',
-      name: 'group',
-      component: Group
-    },
+ 
     {
       path: '/login',
       name: 'login',
@@ -55,11 +50,7 @@ const router = createRouter({
       name: 'groupWritting',
       component: groupWritting
     },
-    {
-      path: '/creategroup',
-      name: 'creategroup',
-      component: creatgroup
-    },
+  
     {
       path: '/IdeaWriting/:ideaId/:topicId',
       name: 'IdeaWriting',
@@ -73,11 +64,7 @@ const router = createRouter({
     },
 
    
-  {
-    path: '/s',
-    name: 'creatGroup',
-    component: createGroup,
-  },
+ 
 
   {
     path:'/mindmap',
@@ -85,11 +72,7 @@ const router = createRouter({
     component: mindmap
   },
 
-  {
-    path: '/create-topic',
-    name: 'CreateTopic',
-    component: CreateTopic
-  },
+  
 
   {
     path: '/profile',

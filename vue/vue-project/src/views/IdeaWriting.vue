@@ -14,10 +14,11 @@
 
 <script>
 import axios from 'axios';
-import TextareaComponent from '../components/TextareaComponent.vue';
+import TextareaComponent from '@/components/TextareaComponent.vue'
 import ListGroupComponent from '../components/ListGroupComponent.vue';
-import WorksComponent from '../components/WorksComponent.vue';
 import GroupComponent from '../components/GroupComponent.vue';
+import WorksComponent from '@/components/WorksComponent.vue'
+
 
 export default {
     components: {

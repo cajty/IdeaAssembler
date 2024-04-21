@@ -44,8 +44,10 @@
 import axios from 'axios';
 import ListGroupComponent from '../components/ListGroupComponent.vue';
 import GroupComponent from '../components/GroupComponent.vue';
-import CreatGroup from '@/components/CreateGroup.vue';
-import GroupSelect from '@/components/select/GroupSelect.vue';
+import CreatGroup from '@/components/form/CreateGroup.vue';
+
+
+
 
 
 export default {
@@ -54,7 +56,7 @@ export default {
         ListGroupComponent,
         GroupComponent,
         CreatGroup,
-        GroupSelect,
+        // GroupSelect,
     },
     data() {
         return {
