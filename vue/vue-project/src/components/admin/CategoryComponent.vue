@@ -1,4 +1,6 @@
 <template>
+    
+   
     <div class="card mt-4 col-8 m-5" id="d">
         <div class="card-body">
             <h5 class="card-title">
@@ -17,7 +19,7 @@
             </h5>
             <table class="table">
                 <tbody>
-                    <tr v-for="(category, index) in categories" :key="index">
+                    <tr v-for="(category, index) in categories" :key="index" >
                         <td>
                             <input type="text" v-model="category.name" class="form-control">
 
@@ -39,7 +41,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import axiosInstance from '@/axiosConfig.js';
 
 export default {
     data() {
@@ -54,17 +57,16 @@ export default {
     methods: {
         async getCategories() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/category');
-                this.categories = response.data;
+                const response = await axiosInstance.get('category');
+                this.categories = response;
             } catch (error) {
                 console.error(error);
             }
         },
         async submitCategory() {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/category', { name: this.categoryName });
-                console.log(response.data);
-                this.categories.push(response.data);
+                const response = await axiosInstance.post('category', { name: this.categoryName });
+                this.categories.push(response);
                 this.categoryName = '';
             } catch (error) {
                 console.error(error);
@@ -72,15 +74,15 @@ export default {
         },
         async getCategory(id) {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/category/${id}`);
-                this.categoryName = response.data.name;
+                const response = await axiosInstance.get(`category/${id}`);
+                this.categoryName = response.name;
             } catch (error) {
                 console.error(error);
             }
         },
         async deleteCategory(id) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/api/category/${id}`);
+                await axiosInstance.delete(`category/${id}`);
                 this.categories = this.categories.filter(category => category.id !== id);
             } catch (error) {
                 console.error(error);
@@ -88,7 +90,7 @@ export default {
         },
         async updateCategory(id, name) {
             try {
-                const response = await axios.put(`http://127.0.0.1:8000/api/category/${id}`, { name: name });
+                const response = await axiosInstance.put(`category/${id}`, { name: name });cd
             } catch (error) {
                 console.error(error);
             }

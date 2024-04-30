@@ -16,20 +16,23 @@ import './assets/main.css'
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/AdminView">AdminView</router-link>
+            <li class="nav-item" v-if="admin === true">
+              <router-link class="nav-link" to="/admin/category">AdminView</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="userName">
               <router-link class="nav-link" to="/profile">profile</router-link>
+            </li>
+            <li class="nav-item" v-if="userName">
+              <router-link class="nav-link" to="/serch">home</router-link>
             </li>
           </ul>
 
           <div class="dropdown  ">
             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ isLoggedIn ? userName : 'Login' }}
+              {{ userName ? userName : 'Login' }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li v-if="isLoggedIn"><a class="dropdown-item" @click="logout">Logout</a></li>
+              <li v-if="userName"><a class="dropdown-item" @click="logout">Logout</a></li>
               <li v-else>
                 <router-link class="dropdown-item" to="/signup">Sign in</router-link>
                 <router-link class="dropdown-item" to="/login">Login</router-link>
@@ -70,13 +73,32 @@ export default {
       errors: [],
       isLoggedIn: false,
       userName: '',
+      admin: false,
     };
+  },
+  watch: {
+    '$route'() {
+      const user = localStorage.getItem('user');
+      const role = localStorage.getItem('role');
+      if (user) {
+        this.userName = user;
+      }
+      if (role == 1) {
+        this.admin = true;
+      }
+    },
   },
   methods: {
     logout() {
-      // Handle logout logic
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      this.userName = '';
+      this.$router.push('/login');
     },
+ 
   },
+
 };
 </script>
 <style scoped>

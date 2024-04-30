@@ -17,16 +17,14 @@ return new class extends Migration
             $table->string('description');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
-            $table->boolean('is_p')->default(false);
+            $table->boolean('is_public')->default(false);
             $table->integer('like_count');
             $table->integer('dislike_count');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('topics');

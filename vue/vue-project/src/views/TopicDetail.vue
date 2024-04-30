@@ -6,12 +6,21 @@
             </div>
             <div class="my-card-body">
                 <p class="my-card-text"><i class="fas fa-align-left"></i> {{ topic.description }}</p>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Tags</label>
+                    <div class="d-flex flex-wrap">
+                        <span v-for="tag in topic.tag" :key="tag.id" class="badge bg-primary m-1">
+                            {{ tag.name }}
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="my-card-footer">
                 <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ topic.like_count }}</span>
                 <i class="fas fa-thumbs-down"></i> <span class="dislike-count">{{ topic.dislike_count }}</span>
                 <p class="my-card-text"><i class="fas fa-user"></i> Creator ID: {{ topic.creator_id }}</p>
                 <button class="btn btn-green" @click="creatGroup">creat group</button>
+                <button class="btn btn-blue" @click="makePublic" v-if="topic.is_public == 0">Share</button>
             </div>
         </div>
     </section>
@@ -34,7 +43,6 @@
         <div class="row">
             <ListGroupComponent :groups="group" :selectedGroup="selectedGroup" @updateGroup="componentsOfGroup" />
         </div>
-        <p v-if="error" class="text-danger">{{ error }}</p>
         <GroupComponent :Group="selectedGroup" @removedGroup="removedGroup" />
 
     </div>
@@ -45,6 +53,10 @@ import axios from 'axios';
 import ListGroupComponent from '../components/ListGroupComponent.vue';
 import GroupComponent from '../components/GroupComponent.vue';
 import CreatGroup from '@/components/form/CreateGroup.vue';
+import TagSelect from '@/components/select/TagSelect.vue';
+import Swal from 'sweetalert2';
+import axiosInstance from '@/axiosConfig.js';
+
 
 
 
@@ -56,6 +68,7 @@ export default {
         ListGroupComponent,
         GroupComponent,
         CreatGroup,
+        TagSelect,
         // GroupSelect,
     },
     data() {
@@ -128,16 +141,25 @@ export default {
         },
         async fetchTopics() {
             const id = this.$route.params.id;
-            await axios.get(`http://127.0.0.1:8000/api/topics/${id}`)
+            await axiosInstance.get(`topics/${id}`)
                 .then(response => {
-                    this.topic = response.data;
+
+                    this.topic = response;
+                    
+
                     this.group = this.topic.group;
                     this.componentsOfGroup(0);
 
                 })
                 .catch(error => {
-                    console.error(error);
-                    this.error = 'Failed to fetch data';
+                    const message = error.response.data.message
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: message,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
                 });
         },
         close() {
@@ -149,10 +171,11 @@ export default {
         },
         async newGroup(group) {
             this.close();
-            console.log(group);
+
             this.group.push(group);
             try {
                 const response = await axios.post(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${group.id}`);
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -167,9 +190,19 @@ export default {
         //         console.error(error);
         //     }
         // },
-        async removedGroup(group_id) {
-            this.group = this.group.filter(group => group.id !== group_id);
-        }
+        async makePublic() {
+            try {
+                const response = await axiosInstance.post('/topics/6/public');
+
+                this.topic.is_public = 1;
+
+
+
+            } catch (error) {
+                alert('Error making topic public');
+            }
+        },
+
 
     },
 

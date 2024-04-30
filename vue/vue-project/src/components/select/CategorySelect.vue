@@ -1,7 +1,5 @@
 <template>
-    <h1>d</h1>
     <div class="form-group">
-        <label for="category">Category</label>
         <select class="form-control" id="category" v-model="category"  @change="emitCategory">
             <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
         </select>
@@ -9,7 +7,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 export default {
     data() {
         return {
@@ -25,8 +24,8 @@ export default {
     },
     async created() {
         try {
-            const responseCategories = await axios.get('http://127.0.0.1:8000/api/category');
-            this.categories = responseCategories.data;
+            const responseCategories = await axiosInstance.get('category');
+            this.categories = responseCategories;
         } catch (error) {
             console.error(error);
         }

@@ -6,9 +6,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="text-center">
-                            <img :src="profile.avatar" alt="Profile avatar" class="rounded-circle mb-3" width="100"
-                                height="100">
-                            <h5 class="card-title">{{ profile.name }}</h5>
+                            <h5 class="card-title">{{ userName }}</h5>
 
 
                             <button class="btn btn-black" @click="showIdeaFrom = true">creat idea </button>
@@ -67,6 +65,8 @@ import TopicSelect from '@/components/select/TopicSelect.vue'
 import ideaShowForm from '../components/form/ideaShowForm.vue'
 import CreatGroup from '@/components/form/CreateGroup.vue';
 import CreatTopic from '../components/form/CreatTopic.vue'
+import Swal from 'sweetalert2';
+import axiosInstance from'@/axiosConfig.js';
 
 
 
@@ -90,12 +90,6 @@ export default {
             showIdeaFrom: false,
             showTopicCreat: false,
             showGroupCreat: false,
-            profile: {
-                name: 'John Doe',
-                bio: 'Software engineer with 5+ years of experience in web development.',
-                email: 'john.doe@example.com',
-                avatar: 'https://example.com/avatar.jpg',
-            },
         };
     },
     methods: {
@@ -123,6 +117,7 @@ export default {
 
 
         },
+        
     },
 };
 </script>

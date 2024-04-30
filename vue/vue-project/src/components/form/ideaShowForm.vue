@@ -1,23 +1,22 @@
 <template>
-
     <div class="card popup">
-        <h1>{{ idea_id }}</h1>
-        <button @click="closePopup" class="btn btn-light position-absolute top-0 end-0 m-1">x</button>
+        <div class="card-header">
+            <button @click="closePopup" class="btn-close float-end" aria-label="Close"></button>
+            <h5 class="card-title">{{ idea_id ? 'Edit Idea' : 'Create Idea' }}</h5>
+        </div>
         <div class="card-body">
-            <form>
-                <div class="mb-3">
+            <form @submit.prevent="showIdea">
+                <div class="mb-3" v-if="!idea_id">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter title"
-                        v-if="idea_id == null">
+                    <input type="text" class="form-control" id="title" v-model="title" placeholder="Enter title">
                 </div>
                 <TopicSelect @select-topic="selectTopic" />
-                <div class="d-flex p-2">
-                    <button type="button" class="btn btn-success" @click="showIdea">Create Group</button>
+                <div class="d-flex justify-content-evenly mt-3">
+                    <button type="submit" class="btn btn-success">{{ idea_id ? 'Update Idea' : 'Create Idea' }}</button>
                 </div>
             </form>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -40,19 +39,19 @@ export default {
             },
         };
     },
-    props:{
+    props: {
         idea_id: {
             type: Number,
             default: null
         }
-    
+
     },
 
-      
-         
-        
 
- 
+
+
+
+
     methods: {
         closePopup() {
             this.$emit('close');
@@ -71,9 +70,9 @@ export default {
         async showIdea() {
             if (this.ideaID == null) {
 
-                this.ideaID  = await this.creatIdea();
-                 
-                
+                this.ideaID = await this.creatIdea();
+
+
             }
 
             this.$router.push({ name: 'IdeaWriting', params: { ideaId: this.ideaID, topicId: this.topic_id } });
@@ -81,7 +80,7 @@ export default {
         selectTopic(topic_id) {
             this.topic_id = topic_id;
         },
-       
+
 
     },
 };

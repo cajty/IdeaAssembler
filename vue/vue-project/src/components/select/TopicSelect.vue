@@ -10,7 +10,8 @@
     </template>
 
     <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 export default {
     data() {
         return {
@@ -28,8 +29,8 @@ export default {
 
     async created() {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/user/topics');
-            this.topics = response.data;
+            const response = await axiosInstance.get('user/topics');
+            this.topics = response;
         } catch (error) {
             console.error(error);
         }
