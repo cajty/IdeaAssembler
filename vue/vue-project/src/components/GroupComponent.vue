@@ -54,7 +54,8 @@
 
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 
 export default {
   data() {
@@ -71,11 +72,11 @@ export default {
   },
   methods: {
     createComponent() {
-      axios.post(`http://127.0.0.1:8000/api/groups/${this.Group.id}/componentss`, {
+      axios.post(`groups/${this.Group.id}/componentss`, {
         content: this.content,
       })
         .then(response => {
-          this.Group.component.push(response.data.component);
+          this.Group.component.push(response.component);
           this.content = '';
           this.error = null;
         })
@@ -84,7 +85,7 @@ export default {
         });
     },
     deleteComponent(id) {
-      axios.delete(`http://127.0.0.1:8000/api/groups/${this.Group.id}/components/${id}`)
+      axios.delete(`groups/${this.Group.id}/components/${id}`)
         .then(() => {
           const index = this.Group.component.findIndex(c => c.id === id);
           this.Group.component.splice(index, 1);
@@ -94,7 +95,7 @@ export default {
         });
     },
     updateComponent(id, content) {
-      axios.put(`http://127.0.0.1:8000/api/groups/${this.Group.id}/components/${id}`, { content })
+      axios.put(`groups/${this.Group.id}/components/${id}`, { content })
         .then(() => {
           const index = this.Group.component.findIndex(c => c.id === id);
           this.Group.component[index].content = content;
@@ -104,7 +105,7 @@ export default {
         });
     },
     updateGroup(groupName) {
-      axios.put(`http://127.0.0.1:8000/api/groups/${this.Group.id}`, { name: groupName })
+      axios.put(`groups/${this.Group.id}`, { name: groupName })
         .then(response => {
           console.log(groupName);
           this.Group.name = groupName;
@@ -115,7 +116,7 @@ export default {
     },
     async deleteGroup() {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/groups/${this.Group.id}`);
+        await axios.delete(`groups/${this.Group.id}`);
         this.$emit('removedGroup', this.Group.id);
         alert('Group deleted successfully!');
       } catch (error) {
@@ -125,7 +126,7 @@ export default {
     async removedGroup() {
       try {
         
-        console.log(`http://127.0.0.1:8000/api/topics/${this.topic.id}/groups/${this.Group.id}`);
+        console.log(`topics/${this.topic.id}/groups/${this.Group.id}`);
         this.$emit('removedGroup', this.Group.id);
         alert('Group removed successfully!')
       } catch (error) {

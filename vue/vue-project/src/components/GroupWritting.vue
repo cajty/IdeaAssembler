@@ -16,7 +16,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 export default {
     data() {
         return {
@@ -49,10 +50,10 @@ export default {
             }
         },
         async fetchGroup(id) {
-            await axios.get(`http://127.0.0.1:8000/api/groups/${id}`)
+            await axiosInstance.get(`groups/${id}`)
                 .then(response => {
                     console.log(response.data);
-                    this.groupName = response.data.group;
+                    this.groupName = response.group;
                     response.data.components = response.data.components.map((component, index) => {
                         return { ...component, keydown: index };
                     });

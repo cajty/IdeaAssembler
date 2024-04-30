@@ -6,6 +6,8 @@ use App\Models\Group;
 use App\Models\Component;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use App\Services\GroupOfUser;
+
 
 
 class GroupController extends Controller
@@ -13,16 +15,22 @@ class GroupController extends Controller
 
     public function getUserGroup()
     {
-        $groups = Group::all();
-       
+        try {
+
+            $groupOfUser = GroupOfUser::getInstance(1);
+            $groups = $groupOfUser->getGroups();
     
-        return response()->json($groups);
+            return response()->json($groups);
+        } catch (QueryException $e) {
+
+            return response()->json(['error' => 'Failed to fetch user groups'], 500);
+        }
     }
 
 
     public function create(Request $request)
     {
-       
+
         try {
             $validatedData = $request->validate([
                 'name' => 'required | string | max:255',
@@ -55,7 +63,7 @@ class GroupController extends Controller
         $group->load('component');
 
         return response()->json([
-             $group,
+            $group,
         ], 201);
     }
 

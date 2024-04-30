@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 
 export default {
     emits: ['updateText'],
@@ -29,7 +30,7 @@ export default {
         },
         async saveIdea() {
             try {
-                const response = await axios.put(`http://127.0.0.1:8000/api/ideas/${this.idea.id}`, {
+                const response = await axiosInstance.put(`ideas/${this.idea.id}`, {
                     title: this.idea.title,
                     content: this.selectedWork,
                 });

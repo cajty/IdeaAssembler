@@ -1,18 +1,38 @@
 <template>
-  <div class="popup">
+  <div class="popup  overflow-auto">
     <button @click="closePopup" class="btn btn-light position-absolute top-0 end-0 m-1">x</button>
     <h1>Create Topic</h1>
     <form @submit.prevent="createTopic">
-      <div class="form-group">
-        <label for="topicName">Topic Name</label>
+      <div class="mb-3">
+        <label for="topicName" class="form-label">Topic Name</label>
         <input type="text" class="form-control" id="topicName" v-model="topicName" required>
       </div>
-      <div class="form-group">
-        <label for="description">Description</label>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
         <textarea class="form-control" id="description" v-model="description" required></textarea>
       </div>
-      <GroupSelect @selectedGroups="selectedGroup" />
-      <CategorySelect @select-category="selectCategory" />
+      <div class="mb-3">
+        <label for="description" class="form-label">Group</label>
+
+        <GroupSelect @selectedGroups="selectedGroup" />
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">tag</label>
+
+        <TagSelect @addTags="addTags"  />
+      </div>
+      <div class="mb-3">
+        <label for="isPublic" class="form-label">Is Public?</label>
+        <select class="form-control" id="isPublic" v-model="isPublic" required>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Category</label>
+
+        <CategorySelect @select-category="selectCategory" />
+      </div>
       <button type="submit" class="btn btn-primary">Create Topic</button>
     </form>
   </div>
@@ -22,11 +42,13 @@
 import axios from 'axios';
 import GroupSelect from '@/components/select/GroupSelect.vue';
 import CategorySelect from '@/components/select/CategorySelect.vue';
+import TagSelect from '@/components/select/TagSelect.vue';
 
 export default {
   components: {
     GroupSelect,
     CategorySelect,
+    TagSelect,
   },
   data() {
     return {
@@ -35,7 +57,8 @@ export default {
       category: null,
       categories: [],
       selectedGroups: [],
-      groups: []
+      groups: [],
+      isPublic: 'true',
     }
   },
   methods: {
@@ -43,14 +66,10 @@ export default {
       this.$emit('close');
     },
     selectedGroup(selectedGroups) {
-      console.log(selectedGroups);
       this.selectedGroups = selectedGroups;
-      console.log(this.selectedGroups);
     },
     selectCategory(category) {
-      console.log(category);
       this.category = category;
-      console.log(this.category);
     },
     async createTopic() {
       try {
@@ -58,13 +77,21 @@ export default {
           topic_name: this.topicName,
           description: this.description,
           category_id: this.category,
-          groups: this.selectedGroups
+          groups: this.selectedGroups,
+          tags: this.tags,
+          isPublic: this.isPublic === 'true',
         });
-        let id = response.data.Topic_all_info.id;
+      
+      let id = response.data[0].id;
+     
         this.$router.push(`/topic/${id}`);
       } catch (error) {
         console.error(error);
       }
+    },
+    addTags(tags) {
+      this.tags = tags;
+      console.log(this.tags);
     }
   }
 }
@@ -79,8 +106,8 @@ export default {
   z-index: 1000;
   width: 80%;
   max-width: 90vw;
-  height: 80%;
-  max-height: 90vh;
+  height: 100%;
+  max-height: 100vh;
   padding: 20px;
   background-color: white;
   border: 1px solid #ccc;

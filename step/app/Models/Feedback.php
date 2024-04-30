@@ -13,4 +13,9 @@ class Feedback extends Model
         'user_id',
         'is_like',
     ];
+    protected $hidden = ['updated_at', 'created_at'];
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class);
+    }
 }

@@ -22,24 +22,20 @@ class TagController extends Controller
         return response()->json($Tags);
     }
 
-  
+
     public function storeTag(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'names' => 'required|array',
             'name' => 'required|string|max:100',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
-        // $tags = [];
-        // foreach ($request->names as $name) {
-            // $tags[] =
-              $tags = $this->TagService->createTag(['name' =>  $request->name ]);
-        // }
-    
+
+        $tags = $this->TagService->createTag(['name' =>  $request->name]);
+
+
         return response()->json($tags);
     }
 

@@ -14,6 +14,7 @@ class Tag extends Model
 {
     return $this->belongsToMany(Topic::class, 'tag_topic');
 }
-    protected $hidden = [ 'updated_at', 'created_at'];
+    protected $hidden = ['pivot', 'updated_at', 'created_at'];
+
 
 }

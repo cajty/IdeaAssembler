@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Topic;
-
+ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -34,11 +34,12 @@ class AuthController extends Controller
                     'errors' => $validateUser->errors()
                 ], 401);
             }
-
+            DB::beginTransaction();
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
+                'password' => Hash::make($request->password),
+                'role_id' => 2,
             ]);
             if($user){
                 Topic::create([
@@ -46,29 +47,26 @@ class AuthController extends Controller
                     'description' => 'All groups of user',
                     'category_id' => 1,
                     'creator_id' => $user->id,
-                    'is_p' => 1,
+                    'is_public' => 1,
                     'like_count' => 0,
                     'dislike_count' => 0,
                 ]);
             }
-
+            DB::commit();
             return response()->json([
                 'message' => 'User Created Successfully',
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
+                'error' => $th->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Login The User
-     * @param Request $request
-     * @return User
-     */
+  
+
     public function login(Request $request)
     {
         try {
@@ -82,7 +80,6 @@ class AuthController extends Controller
 
             if ($validateUser->fails()) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'validation error',
                     'errors' => $validateUser->errors()
                 ], 401);
@@ -90,7 +87,6 @@ class AuthController extends Controller
 
             if (!Auth::attempt($request->only(['email', 'password']))) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'Email & Password does not match with our record.',
                 ], 401);
             }
@@ -98,14 +94,13 @@ class AuthController extends Controller
             $user = User::where('email', $request->email)->first();
 
             return response()->json([
-                'status' => true,
                 'message' => 'User Logged In Successfully',
+                'user' => $user->only('name','role_id'),
                 'token' => $user->createToken("API TOKEN")->plainTextToken
             ], 200);
         } catch (QueryException $th) {
             return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
+                'error' => $th->getMessage()
             ], 500);
         }
     }
@@ -132,13 +127,11 @@ class AuthController extends Controller
         $user->tokens()->delete();
 
         return response()->json([
-            'status' => true,
             'message' => 'User Logged Out Successfully'
         ], 200);
-    } catch (\Throwable $th) {
+    } catch (\Throwable $e) {
         return response()->json([
-            'status' => false,
-            'message' => $th->getMessage()
+            'error' => $e->getMessage()
         ], 500);
     }
 }

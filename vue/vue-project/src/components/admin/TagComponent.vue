@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 
 export default {
     data() {
@@ -54,17 +55,17 @@ export default {
     methods: {
         async getTags() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/tag');
-                this.tags = response.data;
+                const response = await axiosInstance.get('tag');
+                this.tags = response;
             } catch (error) {
                 console.error(error);
             }
         },
         async submittag() {
             try {
-                const response = await axios.post('http://127.0.0.1:8000/api/tag', { name: this.tagName });
-                console.log(response.data);
-                this.tags.push(response.data);
+                const response = await axiosInstance.post('tag', { name: this.tagName });
+              
+                this.tags.push(response);
                 this.tagName = '';
             } catch (error) {
                 console.error(error);
@@ -72,15 +73,15 @@ export default {
         },
         async getTag(id) {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/tag/${id}`);
-                this.tagName = response.data.name;
+                const response = await axiosInstance.get(`tag/${id}`);
+                this.tagName = response.name;
             } catch (error) {
                 console.error(error);
             }
         },
         async deleteTag(id) {
             try {
-                await axios.delete(`http://127.0.0.1:8000/api/tag/${id}`);
+                await axiosInstance.delete(`tag/${id}`);
                 this.tags = this.tags.filter(tag => tag.id !== id);
             } catch (error) {
                 console.error(error);
@@ -88,7 +89,7 @@ export default {
         },
         async updateTag(id, name) {
             try {
-                const response = await axios.put(`http://127.0.0.1:8000/api/tag/${id}`, { name: name });
+                const response = await axiosInstance.put(`tag/${id}`, { name: name });
             } catch (error) {
                 console.error(error);
             }

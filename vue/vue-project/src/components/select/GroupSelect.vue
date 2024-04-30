@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axiosInstance from '@/axiosConfig.js';
+
 export default {
     data() {
         return {
@@ -32,8 +33,8 @@ export default {
     },
     async created() {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/groups');
-            this.groups = response.data;
+            const response = await axiosInstance.get('groups');
+            this.groups = response;
 
         } catch (error) {
             console.error(error);

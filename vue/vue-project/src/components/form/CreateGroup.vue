@@ -1,6 +1,6 @@
 <template>
  
-        <div class="card popup">
+        <div class="card popup  overflow-auto">
         <button @click="closePopup" class="btn btn-light position-absolute top-0 end-0 m-1">x</button>
             <div class="card-body">
                 <form>
